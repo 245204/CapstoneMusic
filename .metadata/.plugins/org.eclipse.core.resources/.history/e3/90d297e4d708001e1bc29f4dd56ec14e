@@ -1,0 +1,11 @@
+package com.project.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.project.model.MusicEntity;
+
+public interface MusicRepository extends JpaRepository<MusicEntity, Integer> {
+	MusicEntity findByMusicTitle(String musicTitle);
+	MusicEntity findByMusicArtist(String musicArtist);
+	MusicEntity findByMusic
+}

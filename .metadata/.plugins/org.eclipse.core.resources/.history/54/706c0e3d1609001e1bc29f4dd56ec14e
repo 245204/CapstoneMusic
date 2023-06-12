@@ -1,0 +1,88 @@
+package com.project.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.project.exception.NoAlbumFoundException;
+import com.project.model.MusicEntity;
+import com.project.repository.MusicRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class MusicService {
+	private MusicRepository musicRepository;
+
+	@Autowired
+	public MusicService(MusicRepository musicRepository) {
+		this.musicRepository = musicRepository;
+	}
+
+	public MusicEntity saveMusic(MusicEntity music) {
+		// Perform any additional validation or business logic before saving
+		return musicRepository.save(music);
+	}
+
+	public MusicEntity getMusicById(int musicId) {
+		return musicRepository.findById(musicId).orElse(null);
+	}
+
+	public List<MusicEntity> getAllMusic() {
+		return musicRepository.findAll();
+	}
+	public List<MusicEntity> getMusicByName(String musicTitle) {
+		Optional<MusicEntity>music=musicRepository.findByMusicTitle(musicTitle);
+	
+	
+		//				if (music != null) {
+//					return  ResponseEntity.ok().body(music);
+//				} else {
+//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//					//throw new NoAlbumFoundException("Not found");
+//				}
+		
+	}
+	
+
+	public List<MusicEntity> getMusicByGenre(String musicGenre) {
+		return musicRepository.findByMusicGenre(musicGenre);
+	}
+
+	public List<MusicEntity> getMusicByArtist(String musicArtist) {
+		return musicRepository.findByMusicArtist(musicArtist);
+	}
+
+	public List<MusicEntity> getMusicByYear(Long musicYear) {
+		return musicRepository.findByMusicYear(musicYear);
+
+	}
+
+	public MusicEntity updateMusic(MusicEntity musicEntity) {
+		MusicEntity music = null;
+		Optional<MusicEntity> dup = musicRepository.findById(musicEntity.getMusicId());
+
+		if (dup.isPresent()) {
+			music = dup.get();
+			music.setMusicArtist(musicEntity.getMusicArtist());
+			music.setMusicDescription(musicEntity.getMusicDescription());
+			music.setMusicGenre(musicEntity.getMusicGenre());
+			music.setMusicTitle(musicEntity.getMusicTitle());
+			music.setMusicYear(musicEntity.getMusicYear());
+		}
+		return musicRepository.save(music);
+	}
+
+	public ResponseEntity<String> deleteMusic(int musicId) {
+		if (musicRepository.existsById(musicId)) {
+			musicRepository.deleteById(musicId);
+			return new ResponseEntity<>("Entity Deleted successfully", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("Entity not found", HttpStatus.NOT_FOUND);
+		}
+	}
+
+	
+}

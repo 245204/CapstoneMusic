@@ -1,0 +1,38 @@
+package com.project.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.project.model.MusicEntity;
+import com.project.repository.MusicRepository;
+
+import java.util.List;
+
+@Service
+public class MusicService {
+    private MusicRepository musicRepository;
+
+    @Autowired
+    public MusicService(MusicRepository musicRepository) {
+        this.musicRepository = musicRepository;
+    }
+
+    public MusicEntity saveMusic(MusicEntity music) {
+        // Perform any additional validation or business logic before saving
+        return musicRepository.save(music);
+    }
+
+    public MusicEntity getMusicById(int musicId) {
+        return musicRepository.findById(musicId).orElse(null);
+    }
+
+    public List<MusicEntity> getAllMusic() {
+        return musicRepository.findAll();
+    }
+
+	public MusicEntity getMusicByName(String musicTitle) {
+	return	musicRepository.getMusicByName(musicTitle);
+	
+	}
+}
+
